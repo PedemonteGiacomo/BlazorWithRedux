@@ -1,0 +1,35 @@
+﻿@page "/counter"
+
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent // This is the base class for all Fluxor components, it provides the Store property
+
+@*  This is the namespace for Fluxor    *@ 
+@using Fluxor
+
+@*  
+    IState<T> is a Fluxor interface that represents the current state of a feature. 
+    In this case, CounterState is likely a class that holds the current state of a counter feature in your application. 
+*@
+@inject IState<BlazorWithRedux.Store.CounterState> CounterState
+@*
+    IDispatcher is a Fluxor interface that provides a way to dispatch actions to the store. 
+    You can use it to dispatch actions to the store from your components.
+*@
+@inject IDispatcher Dispatcher
+
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount => CounterState.Value.Count;
+
+    private void IncrementCount()
+    {
+        Dispatcher.Dispatch(new BlazorWithRedux.Store.AddCounter());
+    }
+}
