@@ -17,5 +17,12 @@ namespace BlazorWithRedux.Store
             // this behaviour is possible because the CounterState class is a record
             // if the CounterState class was a class, we would need to create a new instance of the class and copy the properties manually
         }
+
+        // New reducer method
+        [ReducerMethod]
+        public static CounterState OnSubtractCounter(CounterState state, SubCounter action)
+        {
+            return state with { Count = state.Count - 1 };
+        }
     }
 }

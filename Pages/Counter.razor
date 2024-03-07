@@ -4,12 +4,13 @@
 
 @*  This is the namespace for Fluxor    *@ 
 @using Fluxor
+@using BlazorWithRedux.Store
 
 @*  
     IState<T> is a Fluxor interface that represents the current state of a feature. 
     In this case, CounterState is likely a class that holds the current state of a counter feature in your application. 
 *@
-@inject IState<BlazorWithRedux.Store.CounterState> CounterState
+@inject IState<CounterState> CounterState
 @*
     IDispatcher is a Fluxor interface that provides a way to dispatch actions to the store. 
     You can use it to dispatch actions to the store from your components.
@@ -22,14 +23,35 @@
 <h1>Counter</h1>
 
 <p role="status">Current count: @currentCount</p>
+<p role="status">Current count: @currentCount</p>
+<p>Double count: @doubleCount</p>
+<p>Is even: @isEven</p>
+<p>Is odd: @isOdd</p>
+<p>Is negative: @isNegative</p>
+<p>Is positive: @isPositive</p>
+<p>Is zero: @isZero</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Add +1</button>
+
+<button class="btn btn-primary" @onclick="DecrementCount">Add -1</button>
 
 @code {
     private int currentCount => CounterState.Value.Count;
+    private int doubleCount => CounterState.Value.DoubleCount;
+    private bool isEven => CounterState.Value.IsEven;
+    private bool isOdd => CounterState.Value.IsOdd;
+    private bool isNegative => CounterState.Value.IsNegative;
+    private bool isPositive => CounterState.Value.IsPositive;
+    private bool isZero => CounterState.Value.IsZero;
 
     private void IncrementCount()
     {
-        Dispatcher.Dispatch(new BlazorWithRedux.Store.AddCounter());
+        Dispatcher.Dispatch(new AddCounter()); 
+        // Dispatch the action to the store
+    }
+
+    private void DecrementCount()
+    {
+        Dispatcher.Dispatch(new SubCounter()); 
     }
 }
