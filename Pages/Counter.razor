@@ -18,9 +18,22 @@
 *@
 @inject IDispatcher Dispatcher
 
+<div class="container">
+<div class="row">
+    <div class="col">
 <PageTitle>Counter</PageTitle>
+</div>
+</div>
+<div class="row">
+    <div class="col">
 
-<h1>Counter</h1>
+            <h1>Counter</h1>
+        <p>This is a simple example of a Blazor page that uses Fluxor to manage state.</p>
+
+</div>
+</div>
+<div class="row">
+    <div class="col">
 
 <p role="status">Current count: @currentCount</p>
 <p>Double count: @doubleCount</p>
@@ -30,13 +43,18 @@
 <p>Is positive: @isPositive</p>
 <p>Is zero: @isZero</p>
 
+</div>
+</div>
+<div class="row">
+    <div class="col">
 <button class="btn btn-primary" @onclick="IncrementCount">Add +1</button>
 
 <button class="btn btn-primary" @onclick="DecrementCount">Add -1</button>
 
 <hr/>
+</div>
+</div>
 
-<div class="container mt-5">
     <h1>Undo/Redo</h1>
     <div class="row">
         <div class="col">

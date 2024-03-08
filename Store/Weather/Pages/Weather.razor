@@ -1,0 +1,73 @@
+﻿@page "/weather"
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent // This is the base class for all Fluxor components, it provides the Store property
+
+@using Fluxor
+@using Fluxor.Undo
+@using BlazorWithRedux.Store.Weather.Pages
+@using BlazorWithRedux.Store.Weather
+@using BlazorWithRedux.Store.Weather.Store
+
+@inject IDispatcher Dispatcher
+@inject IState<WeatherState> WeatherState
+@inject HttpClient Http
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <button class="btn btn-outline-info" @onclick="LoadForecasts">Refresh Forecasts</button>
+}
+
+@code {
+
+    private WeatherForecast[] forecasts => WeatherState.Value.Forecasts;
+    private bool loading => WeatherState.Value.Loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (WeatherState.Value.Initialized == false)
+        {
+            await LoadForecasts();
+            Dispatcher.Dispatch(new WeatherSetInitializedAction());
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadForecasts()
+    {
+        Dispatcher.Dispatch(new WeatherSetLoadingAction(true));
+        var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        Dispatcher.Dispatch(new WeatherSetForecastsAction(forecasts));
+        Dispatcher.Dispatch(new WeatherSetLoadingAction(false));
+    }
+}

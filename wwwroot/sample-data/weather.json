@@ -23,5 +23,85 @@
     "date": "2022-01-10",
     "temperatureC": -2,
     "summary": "Chilly"
+  },
+  {
+    "date": "2022-01-11",
+    "temperatureC": 3,
+    "summary": "Mild"
+  },
+  {
+    "date": "2022-01-12",
+    "temperatureC": 9,
+    "summary": "Pleasant"
+  },
+  {
+    "date": "2022-01-13",
+    "temperatureC": -5,
+    "summary": "Cold"
+  },
+  {
+    "date": "2022-01-14",
+    "temperatureC": -8,
+    "summary": "Bitter"
+  },
+  {
+    "date": "2022-01-15",
+    "temperatureC": 12,
+    "summary": "Refreshing"
+  },
+  {
+    "date": "2022-01-16",
+    "temperatureC": 18,
+    "summary": "Warm"
+  },
+  {
+    "date": "2022-01-17",
+    "temperatureC": -10,
+    "summary": "Frigid"
+  },
+  {
+    "date": "2022-01-18",
+    "temperatureC": 6,
+    "summary": "Cool"
+  },
+  {
+    "date": "2022-01-19",
+    "temperatureC": 20,
+    "summary": "Hot"
+  },
+  {
+    "date": "2022-01-20",
+    "temperatureC": 0,
+    "summary": "Freezing"
+  },
+  {
+    "date": "2022-01-21",
+    "temperatureC": 15,
+    "summary": "Brisk"
+  },
+  {
+    "date": "2022-01-22",
+    "temperatureC": -12,
+    "summary": "Biting"
+  },
+  {
+    "date": "2022-01-23",
+    "temperatureC": -3,
+    "summary": "Nippy"
+  },
+  {
+    "date": "2022-01-24",
+    "temperatureC": 11,
+    "summary": "Pleasant"
+  },
+  {
+    "date": "2022-01-25",
+    "temperatureC": 7,
+    "summary": "Cool"
+  },
+  {
+    "date": "2022-01-26",
+    "temperatureC": 19,
+    "summary": "Warm"
   }
 ]
