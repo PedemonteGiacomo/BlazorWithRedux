@@ -9,7 +9,6 @@
 
 @inject IDispatcher Dispatcher
 @inject IState<WeatherState> WeatherState
-@inject HttpClient Http
 
 <PageTitle>Weather</PageTitle>
 
@@ -17,7 +16,7 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+@if (loading)
 {
     <p><em>Loading...</em></p>
 }
@@ -33,8 +32,8 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
-            {
+            @foreach (var forecast in forecasts.Take(10))
+                {
                 <tr>
                     <td>@forecast.Date.ToShortDateString()</td>
                     <td>@forecast.TemperatureC</td>
@@ -53,21 +52,19 @@ else
     private WeatherForecast[] forecasts => WeatherState.Value.Forecasts;
     private bool loading => WeatherState.Value.Loading;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (WeatherState.Value.Initialized == false)
         {
-            await LoadForecasts();
+            LoadForecasts();
             Dispatcher.Dispatch(new WeatherSetInitializedAction());
         }
-        await base.OnInitializedAsync();
+        base.OnInitialized();
     }
 
-    private async Task LoadForecasts()
+    private void LoadForecasts()
     {
-        Dispatcher.Dispatch(new WeatherSetLoadingAction(true));
-        var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-        Dispatcher.Dispatch(new WeatherSetForecastsAction(forecasts));
-        Dispatcher.Dispatch(new WeatherSetLoadingAction(false));
+        Dispatcher.Dispatch(new WeatherLoadForecastsAction());
     }
+
 }

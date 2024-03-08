@@ -1,6 +1,4 @@
-﻿using BlazorWithRedux.Store.Weather;
-
-namespace BlazorWithRedux.Store
+﻿namespace BlazorWithRedux.Store.Weather
 {
     public record WeatherState
     {
