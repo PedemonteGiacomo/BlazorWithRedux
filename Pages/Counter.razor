@@ -18,12 +18,10 @@
 *@
 @inject IDispatcher Dispatcher
 
-
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
 
-<p role="status">Current count: @currentCount</p>
 <p role="status">Current count: @currentCount</p>
 <p>Double count: @doubleCount</p>
 <p>Is even: @isEven</p>
@@ -36,10 +34,54 @@
 
 <button class="btn btn-primary" @onclick="DecrementCount">Add -1</button>
 
-<button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;&lt;</button>
-<button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;</button>
-<button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;</button>
-<button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;&gt;</button>
+<hr/>
+
+<div class="container mt-5">
+    <h1>Undo/Redo</h1>
+    <div class="row">
+        <div class="col">
+        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;&lt;</button>
+        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;</button>
+        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;</button>
+        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;&gt;</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <input type="number" @bind="@jumpAmount" min="0" @oninput="CheckJump"/>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="JumpToPreviousState" disabled="@(errorIfJumpingToInvalidStatePAST)">Jump to Previous State</button>
+            <button class="btn btn-primary" @onclick="JumpToFutureState" disabled="@(errorIfJumpingToInvalidStateFUTURE)">Jump to Future State</button>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStateFUTURE) ? "block" : "none")">
+                Too much state redo selected.
+            </div>
+            <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStatePAST) ? "block" : "none")">
+                Too much state undo selected for current history
+            </div>
+            <div class="alert alert-warning" role="alert" style="display: @((UndoableCounterState.Value.HasNoPast && UndoableCounterState.Value.HasNoFuture) ? "block" : "none")">
+                No undo or redo history for current history
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <h1>History Count</h1>
+            <p><b>Very interesting:</b><br /> The count value refers to the number of elements inside the let's say "list of objects" inside each state.<br /> In exeption for the present that refers to the current value of the "Count" property</p>
+            <p>Current State: @UndoableCounterState.Value.Present.Count</p>
+            <p>Undo History: @UndoableCounterState.Value.Past.Count</p>
+            <p>Redo History: @UndoableCounterState.Value.Future.Count</p>
+    </div>
+    </div>
+</div>
+
 
 @code {
     private int currentCount => UndoableCounterState.Value.Present.Count;
@@ -49,15 +91,58 @@
     private bool isNegative => UndoableCounterState.Value.Present.IsNegative;
     private bool isPositive => UndoableCounterState.Value.Present.IsPositive;
     private bool isZero => UndoableCounterState.Value.Present.IsZero;
+    private int jumpAmount;
+    private bool errorIfJumpingToInvalidStatePAST { get; set; } = false;
+    private bool errorIfJumpingToInvalidStateFUTURE { get; set; } = false;
 
     private void IncrementCount()
     {
-        Dispatcher.Dispatch(new AddCounter()); 
-        // Dispatch the action to the store
+        Dispatcher.Dispatch(new AddCounter()); // Dispatch the action to the store
     }
 
     private void DecrementCount()
     {
         Dispatcher.Dispatch(new SubCounter()); 
+    }
+
+    private void JumpToPreviousState()
+    {
+        if (jumpAmount <= UndoableCounterState.Value.Past.Count)
+        {
+            Dispatcher.Dispatch(new JumpAction<UndoableCounterState>(-jumpAmount));
+        }
+    }
+
+    private void JumpToFutureState()
+    {
+        if (jumpAmount <= UndoableCounterState.Value.Future.Count)
+        {
+            Dispatcher.Dispatch(new JumpAction<UndoableCounterState>(jumpAmount));
+        }
+    }
+
+    private void CheckJump(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int value))
+        {
+            jumpAmount = value;
+            if (jumpAmount <= UndoableCounterState.Value.Past.Count)
+            {
+                errorIfJumpingToInvalidStatePAST = false;
+            }
+            else
+            {
+                errorIfJumpingToInvalidStatePAST = true;
+            }
+
+            if (jumpAmount <= UndoableCounterState.Value.Future.Count)
+            {
+                errorIfJumpingToInvalidStateFUTURE = false;
+            }
+            else
+            {
+                errorIfJumpingToInvalidStateFUTURE = true;
+            }
+        }
     }
 }
