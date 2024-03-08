@@ -26,8 +26,6 @@ namespace BlazorWithRedux.Store.Weather.Store
             dispatcher.Dispatch(new WeatherSetLoadingAction(true));
             var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
             var randomForecasts = GetRandomForecasts(forecasts); // Get a randomly set of forecasts
-            Console.WriteLine("Forecasts length: " + randomForecasts.Length);
-            Console.WriteLine("Forecasts: " + randomForecasts);
             dispatcher.Dispatch(new WeatherSetForecastsAction(randomForecasts));
             dispatcher.Dispatch(new WeatherSetLoadingAction(false));
         }

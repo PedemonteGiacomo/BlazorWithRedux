@@ -1,18 +1,22 @@
 ﻿using Fluxor;
+using Fluxor.Undo;
 
 namespace BlazorWithRedux.Store.Weather.Store
 {
-    public class WeatherFeature : Feature<WeatherState>
+    public sealed class UndoableWeatherFeature : Feature<UndoableWeatherState>
     {
         public override string GetName() => "Weather";
 
-        protected override WeatherState GetInitialState()
+        protected override UndoableWeatherState GetInitialState()
         {
-            return new WeatherState
+            return new()
             {
-                Initialized = false,
-                Loading = false,
-                Forecasts = Array.Empty<WeatherForecast>()
+                Present = new WeatherState()
+                {
+                    Initialized = false,
+                    Loading = false,
+                    Forecasts = Array.Empty<WeatherForecast>()
+                }
             };
         }
     }

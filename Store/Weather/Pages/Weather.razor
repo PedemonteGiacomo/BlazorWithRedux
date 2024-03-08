@@ -8,7 +8,7 @@
 @using BlazorWithRedux.Store.Weather.Store
 
 @inject IDispatcher Dispatcher
-@inject IState<WeatherState> WeatherState
+@inject IState<UndoableWeatherState> UndoableWeatherState
 
 <PageTitle>Weather</PageTitle>
 
@@ -19,6 +19,17 @@
 @if (loading)
 {
     <p><em>Loading...</em></p>
+
+    <hr />
+    <h1 class="mt-3">Undo/Redo</h1>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoPast">&lt;&lt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoPast">&lt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoFuture">&gt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoFuture">&gt;&gt;</button>
+        </div>
+    </div>
 }
 else
 {
@@ -45,16 +56,26 @@ else
     </table>
     <br />
     <button class="btn btn-outline-info" @onclick="LoadForecasts">Refresh Forecasts</button>
+    <hr />
+    <h1 class="mt-3">Undo/Redo</h1>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoPast">&lt;&lt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoPast">&lt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoFuture">&gt;</button>
+            <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableWeatherState>())) disabled="@UndoableWeatherState.Value.HasNoFuture">&gt;&gt;</button>
+        </div>
+    </div>
 }
 
 @code {
 
-    private WeatherForecast[] forecasts => WeatherState.Value.Forecasts;
-    private bool loading => WeatherState.Value.Loading;
+    private WeatherForecast[] forecasts => UndoableWeatherState.Value.Present.Forecasts;
+    private bool loading => UndoableWeatherState.Value.Present.Loading;
 
     protected override void OnInitialized()
     {
-        if (WeatherState.Value.Initialized == false)
+        if (UndoableWeatherState.Value.Present.Initialized == false)
         {
             LoadForecasts();
             Dispatcher.Dispatch(new WeatherSetInitializedAction());

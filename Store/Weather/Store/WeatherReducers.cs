@@ -1,34 +1,30 @@
 ﻿using Fluxor;
+using Fluxor.Undo;
 
 namespace BlazorWithRedux.Store.Weather.Store
 {
-    public static class WeatherReducers
+    public class WeatherReducers : UndoableReducers<UndoableWeatherState>
     {
         [ReducerMethod]
-        public static WeatherState OnSetForecasts(WeatherState state, WeatherSetForecastsAction action)
+        public static UndoableWeatherState OnSetForecasts(UndoableWeatherState state, WeatherSetForecastsAction action)
+        => state.WithNewPresent(p => p with
         {
-            return state with
-            {
-                Forecasts = action.Forecasts
-            };
-        }
+            Forecasts = action.Forecasts
+        });
 
         [ReducerMethod]
-        public static WeatherState OnSetLoading(WeatherState state, WeatherSetLoadingAction action)
+        public static UndoableWeatherState OnSetLoading(UndoableWeatherState state, WeatherSetLoadingAction action)
+        => state.WithNewPresent(p => p with
         {
-            return state with
-            {
-                Loading = action.Loading
-            };
-        }
+            Loading = action.Loading
+        });
+        
 
         [ReducerMethod(typeof(WeatherSetInitializedAction))]
-        public static WeatherState OnSetInitialized(WeatherState state)
-        {
-            return state with
-            {
-                Initialized = true
-            };
-        }
+        public static UndoableWeatherState OnSetInitialized(UndoableWeatherState state)
+            => state.WithNewPresent(p => p with
+               {
+                   Initialized = true
+                });
     }
 }
