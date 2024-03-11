@@ -1,6 +1,6 @@
-﻿using BlazorWithRedux.Store.Weather.Pages;
+﻿using BlazorWithRedux.Store.Weather.State;
 
-namespace BlazorWithRedux.Store.Weather.Store
+namespace BlazorWithRedux.Store.Weather.Actions
 {
     public class WeatherSetForecastsAction
     {

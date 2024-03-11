@@ -1,4 +1,4 @@
-﻿namespace BlazorWithRedux.Store.Weather
+﻿namespace BlazorWithRedux.Store.Weather.State
 {
     public class WeatherForecast
     {

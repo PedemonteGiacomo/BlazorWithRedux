@@ -2,10 +2,14 @@
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent // This is the base class for all Fluxor components, it provides the Store property
 
-@*  This is the namespace for Fluxor    *@ 
+@* Namespaces for Fluxor redux implementation *@
 @using Fluxor
 @using Fluxor.Undo
-@using BlazorWithRedux.Store
+
+@* Using the namespaces for the counter redux *@
+@using BlazorWithRedux.Store.Counter.Actions
+@using BlazorWithRedux.Store.Counter.Reducers
+@using BlazorWithRedux.Store.Counter.State
 
 @*  
     IState<T> is a Fluxor interface that represents the current state of a feature. 

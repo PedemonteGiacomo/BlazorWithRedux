@@ -1,7 +1,9 @@
-﻿using Fluxor;
+﻿using BlazorWithRedux.Store.Weather.Actions;
+using BlazorWithRedux.Store.Weather.State;
+using Fluxor;
 using System.Net.Http.Json;
 
-namespace BlazorWithRedux.Store.Weather.Store
+namespace BlazorWithRedux.Store.Weather.Effects
 {
     public class WeatherEffects
     {

@@ -1,7 +1,8 @@
-﻿using Fluxor;
+﻿using BlazorWithRedux.Store.Weather.State;
+using Fluxor;
 using Fluxor.Undo;
 
-namespace BlazorWithRedux.Store.Weather.Store
+namespace BlazorWithRedux.Store.Weather.Feature
 {
     public sealed class UndoableWeatherFeature : Feature<UndoableWeatherState>
     {

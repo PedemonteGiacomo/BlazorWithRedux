@@ -1,4 +1,4 @@
-﻿namespace BlazorWithRedux.Store.Weather.Store
+﻿namespace BlazorWithRedux.Store.Weather.Actions
 {
     public class WeatherSetLoadingAction
     {
