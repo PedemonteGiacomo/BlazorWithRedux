@@ -82,12 +82,12 @@
     </div>
     <div class="row mt-3">
         <div class="col">
-            <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStateFUTURE) ? "block" : "none")">
+            @* <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStateFUTURE) ? "block" : "none")">
                 Too much state redo selected.
             </div>
             <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStatePAST) ? "block" : "none")">
                 Too much state undo selected for current history
-            </div>
+            </div> *@
             <div class="alert alert-warning" role="alert" style="display: @((UndoableCounterState.Value.HasNoPast && UndoableCounterState.Value.HasNoFuture) ? "block" : "none")">
                 No undo or redo history for current history
             </div>
@@ -144,12 +144,18 @@
         }
     }
 
-    private void CheckJump(ChangeEventArgs e)
+    private void CheckJump(ChangeEventArgs e = null)
     {
+        if(e == null)
+        {
+            errorIfJumpingToInvalidStatePAST = true;
+            errorIfJumpingToInvalidStateFUTURE = true;
+            return;
+        }
         if (int.TryParse(e.Value.ToString(), out int value))
         {
             jumpAmount = value;
-            if (jumpAmount <= UndoableCounterState.Value.Past.Count)
+            if (jumpAmount <= UndoableCounterState.Value.Past.Count && jumpAmount != 0)
             {
                 errorIfJumpingToInvalidStatePAST = false;
             }
@@ -158,7 +164,7 @@
                 errorIfJumpingToInvalidStatePAST = true;
             }
 
-            if (jumpAmount <= UndoableCounterState.Value.Future.Count)
+            if (jumpAmount <= UndoableCounterState.Value.Future.Count && jumpAmount != 0)
             {
                 errorIfJumpingToInvalidStateFUTURE = false;
             }
@@ -167,5 +173,10 @@
                 errorIfJumpingToInvalidStateFUTURE = true;
             }
         }
+    }
+
+    protected override void OnInitialized()
+    {
+        CheckJump();
     }
 }
