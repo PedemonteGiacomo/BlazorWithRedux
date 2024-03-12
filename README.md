@@ -1,4 +1,4 @@
-# BlazorWithRedux
+# Blazor with Fluxor(Redux) - Undoable State(Undo/Redo)
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -39,7 +39,7 @@ builder.Services.AddFluxor(options =>
 
 ## Usage
 
-I implemented two different way to use this undo/redo states, one for the **`counter`** that rely on ìpure functionsî so without using Effects but only using Reducers (no need for async operations). On the other hand, the other implementation regards the **`weather`** component that use the effects to retrieve data async by simulating an api call that takes data from [sample-data/weather.json](https://github.com/PedemonteGiacomo/BlazorWithRedux/blob/master/wwwroot/sample-data/weather.json).
+I implemented two different way to use this undo/redo states, one for the **`counter`** that rely on ‚Äúpure functions‚Äù so without using Effects but only using Reducers (no need for async operations). On the other hand, the other implementation regards the **`weather`** component that use the effects to retrieve data async by simulating an api call that takes data from [sample-data/weather.json](https://github.com/PedemonteGiacomo/BlazorWithRedux/blob/master/wwwroot/sample-data/weather.json).
 
 In both of the implementation I reach out the following usage:
 
@@ -77,9 +77,9 @@ This will take in account the undoable actions imported form the package Fluxor.
 ### Uso delle keyword `record` e `sealed`:
 
 
-La keyword `record` ci permette di creare oggetti immutabili, il che ci serve eccome dato che non si vuole assolutamente modificare gli stati stessi ma si vuole avere la possibilit‡ di creare stati analoghi con le modifiche gestite attraverso le azioni che il client sta eseguendo sullíapplicazione. Inoltre si puÚ direttamente modificare il campo/i campi di interesse e in automatico C# esegue la deep copy delle altre propriet‡ dello stato.
+La keyword `record` ci permette di creare oggetti immutabili, il che ci serve eccome dato che non si vuole assolutamente modificare gli stati stessi ma si vuole avere la possibilit√† di creare stati analoghi con le modifiche gestite attraverso le azioni che il client sta eseguendo sull‚Äôapplicazione. Inoltre si pu√≤ direttamente modificare il campo/i campi di interesse e in automatico C# esegue la deep copy delle altre propriet√† dello stato.
 
-La keyword `sealed` in C# viene utilizzata per dichiarare una classe che non puÚ essere ereditata da altre classi. Quando una classe viene dichiarata come "sealed", significa che non puÚ essere estesa o derivata da altre classi. Questo vincolo Ë utile quando si desidera impedire l'estensione di una classe per motivi di sicurezza o per garantire che la classe rimanga immutabile.
+La keyword `sealed` in C# viene utilizzata per dichiarare una classe che non pu√≤ essere ereditata da altre classi. Quando una classe viene dichiarata come "sealed", significa che non pu√≤ essere estesa o derivata da altre classi. Questo vincolo √® utile quando si desidera impedire l'estensione di una classe per motivi di sicurezza o per garantire che la classe rimanga immutabile.
 
 
 
@@ -99,7 +99,7 @@ This is interesting because the *Undoable functionality* is based on the concept
 
 - **Present** => the present is were we are in the moment, what the client is currently visualizing
     - so, in the future we need to change the way we return the record of the `CounterState`, because we need to return the `UndoableCounterState`
-- **Past** => previous actions made by the user are listed in ìpast actionsî
+- **Past** => previous actions made by the user are listed in ‚Äúpast actions‚Äù
 - **Future** => when we perform some undo actions, the actions that before were in the past, when coming back, goes to the future.
     - when the user go back to a certain state and then perform some other actions that change the state, the future is cancelled and the state before the action is added to the past list.
 
@@ -170,7 +170,7 @@ private void JumpToFutureState()
 
 ### REDUCERS
 
-The reducers are methods used to ìreduceî so perform the actions that they are prepared to handle, so theyíre triggered when the action is called as we have seen above by, for example, the client.
+The reducers are methods used to ‚Äúreduce‚Äù so perform the actions that they are prepared to handle, so they‚Äôre triggered when the action is called as we have seen above by, for example, the client.
 
 ```csharp
 public class CounterReducers : UndoableReducers<UndoableCounterState>
@@ -205,7 +205,7 @@ Respecting on the simple usage of the state (reported in green in the comments) 
 
 ### EFFECTS
 
-In the implementation of the [Weather](https://github.com/PedemonteGiacomo/BlazorWithRedux/tree/master/Store/Weather) component using Redux Fluxor Undoable states, the usage of the effects was needed because the main purpose of this component is to retrieve data from a ìsimulatedî API, so retrieving data from a JSON file and display 10 results of this retreived data that changes randomly every time we fetch or load those ì*WeatherForecasts*î
+In the implementation of the [Weather](https://github.com/PedemonteGiacomo/BlazorWithRedux/tree/master/Store/Weather) component using Redux Fluxor Undoable states, the usage of the effects was needed because the main purpose of this component is to retrieve data from a ‚Äúsimulated‚Äù API, so retrieving data from a JSON file and display 10 results of this retreived data that changes randomly every time we fetch or load those ‚Äú*WeatherForecasts*‚Äù
 
 ```csharp
 <button class="btn btn-outline-info" @onclick="LoadForecasts">Refresh Forecasts</button>
@@ -230,9 +230,9 @@ private void LoadForecasts()
 }
 ```
 
-The `WeatherSetInitializedAction()` is an action that is taken into account by the simple weather reducer because donít need to wait any operations so we donít need to introduce the `async/await` architecture as we have seen above in the `CounterState` and make manage this state properties by the ì*pure functions*î **of the `WeatherReducers`.
+The `WeatherSetInitializedAction()` is an action that is taken into account by the simple weather reducer because don‚Äôt need to wait any operations so we don‚Äôt need to introduce the `async/await` architecture as we have seen above in the `CounterState` and make manage this state properties by the ‚Äú*pure functions*‚Äù **of the `WeatherReducers`.
 
-On the other hand, the `WeatherLoadForecastsAction` has to be handled by an `Effect`. This because we need to handle the request as an `HttpClient`, if we donít use the effect we need to inject the http client directly in the component in the client side and make the client perform the request in this way:
+On the other hand, the `WeatherLoadForecastsAction` has to be handled by an `Effect`. This because we need to handle the request as an `HttpClient`, if we don‚Äôt use the effect we need to inject the http client directly in the component in the client side and make the client perform the request in this way:
 
 ```csharp
 private async Task LoadForecasts()
