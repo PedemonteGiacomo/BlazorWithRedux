@@ -1,21 +1,14 @@
 # BlazorWithRedux
 
-## Problemi Past/Future handler of UndoableObjects:
-
-### Problema 1: Gestione Corretta della Cronologia degli Undo
-
-**Descrizione**: Quando si effettua un nuovo cambiamento di stato dopo aver eseguito delle operazioni di undo, i cambiamenti non vengono correttamente aggiunti alla cronologia dei passati, causando un reset del flusso degli undo.
-
-**Cause**: Questo è il comportamento attuale della libreria, ma è necessario modificare l'implementazione.
-
-**Soluzione Proposta:** 
-- Potrebbe essere logico supporre che quando si torna indietro di un certo numero di azioni, si sia liberi di andare avanti, ma dal momento in cui si effettua un nuovo cambiamento, il futuro viene cancellato.
-	- In questo modo si può capire che il flusso degli undo ha ripreso da un punto "seguibile".
-		- Questo è importante perché, ad esempio, se il futuro è 14 e si è arrivati a 13, se si effettua un'azione che porta allo stesso stato, si avrebbe uno stato duplicato e potrebbe essere poco intuitivo tornare al futuro (poiché sarebbe lo stesso stato).
-		- Questo potrebbe essere un problema quando si desidera tornare indietro a uno stato futuro come 50, andando indietro di 7/8 stati, ma avendo aggiornato lo stato, non si ha più accesso al futuro e si può solo tornare indietro e fare azioni di undo al posto di redo.
-
-**Implementazione:** Il codice necessario per affrontare questo problema è già presente nel progetto. Bisogna fare un'attenta revisione e apportare le modifiche necessarie per garantire il corretto funzionamento della cronologia degli undo.
-
+## Table of Contents
+- [Introduction](#introduction)
+- [Implementing Undo/Redo actions](#implementing-undoredo-actions)
+- [Usage](#usage)
+  - [STATE](#state)
+  - [FEATURE](#feature)
+  - [ACTIONS](#actions)
+  - [REDUCERS](#reducers)
+  - [EFFECTS](#effects)
 
 # Introduction
 
@@ -83,12 +76,12 @@ This will take in account the undoable actions imported form the package Fluxor.
 
 ### Uso delle keyword `record` e `sealed`:
 
-<aside>
-?? La keyword “record” ci permette di creare oggetti immutabili, il che ci serve eccome dato che non si vuole assolutamente modificare gli stati stessi ma si vuole avere la possibilità di creare stati analoghi con le modifiche gestite attraverso le azioni che il client sta eseguendo sull’applicazione. Inoltre si può direttamente modificare il campo/i campi di interesse e in automatico C# esegue la deep copy delle altre proprietà dello stato.
 
-La keyword "sealed" in C# viene utilizzata per dichiarare una classe che non può essere ereditata da altre classi. Quando una classe viene dichiarata come "sealed", significa che non può essere estesa o derivata da altre classi. Questo vincolo è utile quando si desidera impedire l'estensione di una classe per motivi di sicurezza o per garantire che la classe rimanga immutabile.
+La keyword `record` ci permette di creare oggetti immutabili, il che ci serve eccome dato che non si vuole assolutamente modificare gli stati stessi ma si vuole avere la possibilità di creare stati analoghi con le modifiche gestite attraverso le azioni che il client sta eseguendo sull’applicazione. Inoltre si può direttamente modificare il campo/i campi di interesse e in automatico C# esegue la deep copy delle altre proprietà dello stato.
 
-</aside>
+La keyword `sealed` in C# viene utilizzata per dichiarare una classe che non può essere ereditata da altre classi. Quando una classe viene dichiarata come "sealed", significa che non può essere estesa o derivata da altre classi. Questo vincolo è utile quando si desidera impedire l'estensione di una classe per motivi di sicurezza o per garantire che la classe rimanga immutabile.
+
+
 
 ### FEATURE
 
@@ -104,10 +97,10 @@ public sealed class UndoableCounterFeature : Feature<UndoableCounterState>
 
 This is interesting because the *Undoable functionality* is based on the concepts of:
 
-- **Present** ? the present is were we are in the moment, what the client is currently visualizing
+- **Present** => the present is were we are in the moment, what the client is currently visualizing
     - so, in the future we need to change the way we return the record of the `CounterState`, because we need to return the `UndoableCounterState`
-- **Past** ? previous actions made by the user are listed in “past actions”
-- **Future** ? when we perform some undo actions, the actions that before were in the past, when coming back, goes to the future.
+- **Past** => previous actions made by the user are listed in “past actions”
+- **Future** => when we perform some undo actions, the actions that before were in the past, when coming back, goes to the future.
     - when the user go back to a certain state and then perform some other actions that change the state, the future is cancelled and the state before the action is added to the past list.
 
 ### ACTIONS
