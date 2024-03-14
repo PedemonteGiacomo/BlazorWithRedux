@@ -1,7 +1,4 @@
-﻿using Fluxor;
-using Fluxor.Undo;
-using BlazorWithRedux.Store.Counter.Reducers;
-using BlazorWithRedux.Store.Counter.Actions;
+﻿using Fluxor.Undo;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorWithRedux.Store.Counter.State

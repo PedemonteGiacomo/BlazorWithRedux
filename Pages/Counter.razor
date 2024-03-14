@@ -1,6 +1,6 @@
 ﻿@page "/counter"
 
-@inherits Fluxor.Blazor.Web.Components.FluxorComponent // This is the base class for all Fluxor components, it provides the Store property
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent; // This is the base class for all Fluxor components, it provides the Store property
 
 @* Namespaces for Fluxor redux implementation *@
 @using Fluxor
@@ -8,7 +8,6 @@
 
 @* Using the namespaces for the counter redux *@
 @using BlazorWithRedux.Store.Counter.Actions
-@using BlazorWithRedux.Store.Counter.Reducers
 @using BlazorWithRedux.Store.Counter.State
 
 @*  

@@ -1,6 +1,5 @@
 ﻿using BlazorWithRedux.Store.Weather.State;
 using Fluxor;
-using Fluxor.Undo;
 
 namespace BlazorWithRedux.Store.Weather.Feature
 {
