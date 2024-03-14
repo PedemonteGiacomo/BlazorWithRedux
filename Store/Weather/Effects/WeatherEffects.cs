@@ -2,6 +2,7 @@
 using BlazorWithRedux.Store.Weather.State;
 using Fluxor;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 
 namespace BlazorWithRedux.Store.Weather.Effects
 {
@@ -19,10 +20,13 @@ namespace BlazorWithRedux.Store.Weather.Effects
         [EffectMethod]
         public async Task LoadForecasts(WeatherLoadForecastsAction action, IDispatcher dispatcher)
         {
+            // when I perform the load action the dispatcher triggers the loading action to true before doing this and to false doing this rendering
             dispatcher.Dispatch(new WeatherSetLoadingAction(true));
+
             var forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
             var randomForecasts = GetRandomForecasts(forecasts); // Get a randomly set of forecasts
             dispatcher.Dispatch(new WeatherSetForecastsAction(randomForecasts));
+
             dispatcher.Dispatch(new WeatherSetLoadingAction(false));
         }
 
