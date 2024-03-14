@@ -5,10 +5,8 @@ using System.Net.Http.Json;
 
 namespace BlazorWithRedux.Store.Weather.Effects
 {
-    public class WeatherEffects
+    public class WeatherEffects(HttpClient Http)
     {
-        private readonly HttpClient Http;
-
         /* This is the main difference between using effects or not, here we have
          * has a constructor into which we can inject dependencies, 
          * and which we can use in each EffectMethod.
@@ -17,10 +15,6 @@ namespace BlazorWithRedux.Store.Weather.Effects
          * Moreover we don't need to inject the HttpClient into the razor component
          * and pass it to the action creator, we can just inject it into the effect class.
          */
-        public WeatherEffects(HttpClient http)
-        {
-            Http = http;
-        }
 
         [EffectMethod]
         public async Task LoadForecasts(WeatherLoadForecastsAction action, IDispatcher dispatcher)
