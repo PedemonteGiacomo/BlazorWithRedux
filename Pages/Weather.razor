@@ -75,12 +75,12 @@ else
 
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         if (UndoableWeatherState.Value.Present.Initialized == false)
         {
             LoadForecasts();
             Dispatcher.Dispatch(new WeatherSetInitializedAction());
         }
-        base.OnInitialized();
     }
 
     private void LoadForecasts()
