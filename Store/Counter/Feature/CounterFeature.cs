@@ -1,4 +1,5 @@
-﻿using BlazorWithRedux.Store.Counter.State;
+﻿using BlazorWithRedux.Store.Counter.Reducers;
+using BlazorWithRedux.Store.Counter.State;
 using Fluxor;
 
 namespace BlazorWithRedux.Store.Counter.Feature
