@@ -332,3 +332,7 @@ Use the Redux DevTools to inspect the state of the application and the actions t
 The usage of the Fluxor.Undo package is very useful to handle the state of the application and make the user able to undo and redo the actions that he made in the application. 
 
 The usage of the Redux DevTools is also very useful to inspect the state of the application and the actions that are dispatched. This is useful for debugging and understanding how the state changes over time.
+
+# TESTS
+
+If you're interested on testing state with unit testing follow this reference -> [UnitTestsForBlazoeWithRedux](https://github.com/PedemonteGiacomo/UnitTestsForBlazorWithRedux/)
