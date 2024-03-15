@@ -326,6 +326,7 @@ As we can see we rely always on reducers but the `EffectMethod` makes us obtain 
 ## Final Result with Redux DevTools extensions
 
 Use the Redux DevTools to inspect the state of the application and the actions that are dispatched. This is useful for debugging and understanding how the state changes over time.
+![Redux DevTools](git_images/Redux_DevTools.png)
 
 # Conclusion
 
