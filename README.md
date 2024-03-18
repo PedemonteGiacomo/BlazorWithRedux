@@ -333,3 +333,15 @@ Use the Redux DevTools to inspect the state of the application and the actions t
 The usage of the Fluxor.Undo package is very useful to handle the state of the application and make the user able to undo and redo the actions that he made in the application. 
 
 The usage of the Redux DevTools is also very useful to inspect the state of the application and the actions that are dispatched. This is useful for debugging and understanding how the state changes over time.
+
+# Testing Fluxor state management
+
+The testing of the Fluxor state management is very simple and straightforward, we can test the state, the actions, the reducers and the effects in a very simple way.
+
+For example, we can test the state of the application by checking the properties of the state that we want to test, for example, the `CounterState`.
+
+We can do this in two ways, by using only `XUnit` to test the logic of the reducer effects or by using the `Bunit` library that is very useful to test the components of the application.
+
+If you are interested in the testing of the Fluxor state management, you can check this two related repositories:
+- [Fluxor state management testing with XUnit](https://github.com/PedemonteGiacomo/UnitTestsForBlazorWithRedux)
+- [Fluxor state management testing with BUnit](https://github.com/PedemonteGiacomo/UnitTestsForBlazorWithRedux_bUnit)

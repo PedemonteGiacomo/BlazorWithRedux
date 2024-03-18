@@ -1,4 +1,8 @@
-﻿@page "/counter"
+﻿<Fluxor.Blazor.Web.StoreInitializer /> 
+<!-- TODO: analyze why this is needed for the tests on the component rendering
+    without this the state change is not managed because this is not present -->
+
+@page "/counter"
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent; // This is the base class for all Fluxor components, it provides the Store property
 
@@ -10,82 +14,80 @@
 @using BlazorWithRedux.Store.Counter.Actions
 @using BlazorWithRedux.Store.Counter.State
 
-@*  
-    IState<T> is a Fluxor interface that represents the current state of a feature. 
-    In this case, CounterState is likely a class that holds the current state of a counter feature in your application. 
+@*
+    IState<T> is a Fluxor interface that represents the current state of a feature.
+    In this case, CounterState is likely a class that holds the current state of a counter feature in your application.
 *@
 @inject IState<UndoableCounterState> UndoableCounterState
 @*
-    IDispatcher is a Fluxor interface that provides a way to dispatch actions to the store. 
+    IDispatcher is a Fluxor interface that provides a way to dispatch actions to the store.
     You can use it to dispatch actions to the store from your components.
 *@
 @inject IDispatcher Dispatcher
 
 <div class="container">
-<div class="row">
-    <div class="col">
-<PageTitle>Counter</PageTitle>
-</div>
-</div>
-<div class="row">
-    <div class="col">
+    <div class="row">
+        <div class="col">
+            <PageTitle>Counter</PageTitle>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
 
             <h1>Counter</h1>
-        <p>This is a simple example of a Blazor page that uses Fluxor to manage state.</p>
+            <p>This is a simple example of a Blazor page that uses Fluxor to manage state.</p>
 
-</div>
-</div>
-<div class="row">
-    <div class="col">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
 
-<p role="status">Current count: @currentCount</p>
-<p>Double count: @doubleCount</p>
-<p>Is even: @isEven</p>
-<p>Is odd: @isOdd</p>
-<p>Is negative: @isNegative</p>
-<p>Is positive: @isPositive</p>
-<p>Is zero: @isZero</p>
+            <p id="currentCount" role="status">Current count: @currentCount</p>
+            <p>Double count: @doubleCount</p>
+            <p>Is even: @isEven</p>
+            <p>Is odd: @isOdd</p>
+            <p>Is negative: @isNegative</p>
+            <p>Is positive: @isPositive</p>
+            <p>Is zero: @isZero</p>
 
-</div>
-</div>
-<div class="row">
-    <div class="col">
-<button class="btn btn-primary" @onclick="IncrementCount">Add +1</button>
-
-<button class="btn btn-primary" @onclick="DecrementCount">Add -1</button>
-
-<hr/>
-</div>
-</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button id="increment" class="btn btn-primary" @onclick="IncrementCount">Add +1</button>
+            <button id="decrement" class="btn btn-primary" @onclick="DecrementCount">Add -1</button>
+            <hr />
+        </div>
+    </div>
 
     <h1>Undo/Redo</h1>
     <div class="row">
         <div class="col">
-        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;&lt;</button>
-        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;</button>
-        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;</button>
-        <button class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;&gt;</button>
+            <button id="undoAllAction" class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;&lt;</button>
+            <button id="undoAction" class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new UndoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoPast">&lt;</button>
+            <button id="redoAction" class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;</button>
+            <button id="redoAllAction" class="btn btn-secondary" @onclick=@(() => Dispatcher.Dispatch(new RedoAllAction<UndoableCounterState>())) disabled="@UndoableCounterState.Value.HasNoFuture">&gt;&gt;</button>
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col">
-            <input type="number" @bind="@jumpAmount" min="0" @oninput="CheckJump"/>
+            <input id="jumpAmount" type="number" @bind="@jumpAmount" min="0" @oninput="CheckJump" />
         </div>
     </div>
     <div class="row mt-3">
         <div class="col">
-            <button class="btn btn-primary" @onclick="JumpToPreviousState" disabled="@(errorIfJumpingToInvalidStatePAST)">Jump to Previous State</button>
-            <button class="btn btn-primary" @onclick="JumpToFutureState" disabled="@(errorIfJumpingToInvalidStateFUTURE)">Jump to Future State</button>
+            <button id="jumpPrevious" class="btn btn-primary" @onclick="JumpToPreviousState" disabled="@(errorIfJumpingToInvalidStatePAST)">Jump to Previous State</button>
+            <button id="jumpFuture" class="btn btn-primary" @onclick="JumpToFutureState" disabled="@(errorIfJumpingToInvalidStateFUTURE)">Jump to Future State</button>
         </div>
     </div>
     <div class="row mt-3">
         <div class="col">
             @* <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStateFUTURE) ? "block" : "none")">
-                Too much state redo selected.
+            Too much state redo selected.
             </div>
             <div class="alert alert-warning" role="alert" style="display: @((errorIfJumpingToInvalidStatePAST) ? "block" : "none")">
-                Too much state undo selected for current history
+            Too much state undo selected for current history
             </div> *@
             <div class="alert alert-warning" role="alert" style="display: @((UndoableCounterState.Value.HasNoPast && UndoableCounterState.Value.HasNoFuture) ? "block" : "none")">
                 No undo or redo history for current history
@@ -100,34 +102,35 @@
             <p>Current State: @UndoableCounterState.Value.Present.Count</p>
             <p>Undo History: @UndoableCounterState.Value.Past.Count</p>
             <p>Redo History: @UndoableCounterState.Value.Future.Count</p>
-    </div>
+        </div>
     </div>
 </div>
 
 
 @code {
-    private int currentCount => UndoableCounterState.Value.Present.Count;
+    public int currentCount => UndoableCounterState.Value.Present.Count;
     private int doubleCount => UndoableCounterState.Value.Present.DoubleCount;
     private bool isEven => UndoableCounterState.Value.Present.IsEven;
     private bool isOdd => UndoableCounterState.Value.Present.IsOdd;
     private bool isNegative => UndoableCounterState.Value.Present.IsNegative;
     private bool isPositive => UndoableCounterState.Value.Present.IsPositive;
     private bool isZero => UndoableCounterState.Value.Present.IsZero;
-    private int jumpAmount;
+    public int jumpAmount; // This is the value that the user will input to jump to a specific state, public to be accessible from the tests in the bUnit project
     private bool errorIfJumpingToInvalidStatePAST { get; set; } = false;
     private bool errorIfJumpingToInvalidStateFUTURE { get; set; } = false;
 
-    private void IncrementCount()
+    // those methods are public only to be able to call it from the bUnit test project, protected or private is the best way to go
+    public void IncrementCount()
     {
         Dispatcher.Dispatch(new AddCounter()); // Dispatch the action to the store
     }
 
-    private void DecrementCount()
+    public void DecrementCount()
     {
-        Dispatcher.Dispatch(new SubCounter()); 
+        Dispatcher.Dispatch(new SubCounter());
     }
 
-    private void JumpToPreviousState()
+    public void JumpToPreviousState()
     {
         if (jumpAmount <= UndoableCounterState.Value.Past.Count)
         {
@@ -135,7 +138,7 @@
         }
     }
 
-    private void JumpToFutureState()
+    public void JumpToFutureState()
     {
         if (jumpAmount <= UndoableCounterState.Value.Future.Count)
         {
@@ -143,9 +146,9 @@
         }
     }
 
-    private void CheckJump(ChangeEventArgs e = null)
+    public void CheckJump(ChangeEventArgs e = null)
     {
-        if(e == null)
+        if (e == null)
         {
             errorIfJumpingToInvalidStatePAST = true;
             errorIfJumpingToInvalidStateFUTURE = true;
