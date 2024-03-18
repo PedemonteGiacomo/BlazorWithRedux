@@ -75,7 +75,7 @@ else
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
+        base.OnInitialized(); // this should work fine but it provide me an error the first time I run the app
         if (UndoableWeatherState.Value.Present.Initialized == false)
         {
             LoadForecasts();
