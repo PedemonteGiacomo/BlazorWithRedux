@@ -22,11 +22,11 @@ var otlpEndpoint = "http://172.212.16.128";
 
 // Add OpenTelemetry
 builder.Services.AddOpenTelemetry()
-    .WithTracing(builder =>
+    .WithTracing(b =>
     {
-        builder
-            .AddSource(serviceName)
+        b
             .SetSampler(new AlwaysOnSampler())
+            .AddSource(serviceName)
             .ConfigureResource(resource =>
                   resource.AddService(
                     serviceName: serviceName,
@@ -37,8 +37,9 @@ builder.Services.AddOpenTelemetry()
             .AddOtlpExporter(opt =>
             {
                 opt.Endpoint = new Uri(otlpEndpoint);
-                opt.Protocol = OtlpExportProtocol.Grpc;
+                opt.Protocol = OtlpExportProtocol.HttpProtobuf;
             });
+            //.AddConsoleExporter();
     });
 
 builder.Services.AddFluxor(options =>
